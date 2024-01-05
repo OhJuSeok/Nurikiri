@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.nurikiri.mapper.StoreMapper">
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from view_store
+		<where>
+			<include refid="criteria"></include>
+		</where>
+	</select>
+
+	<select id="getList" resultType="StoreVO">
+		select * from view_store
+		<where>
+			<include refid="criteria"></include>
+		</where>
+		<include refid="sort" />
+		limit #{offset} , #{amount}
+	</select>
+
+	<select id="getListWithPaging" resultType="StoreVO">
+		select * from view_store_reviews_bookmarks
+		<where>
+			<include refid="criteria"></include>
+		</where>
+		<include refid="sort" />
+		limit #{offset} , #{amount}
+	</select>
+
+	<insert id="insert">
+		insert into store (title, market, address, item, use_recharge_card,
+		use_bill, use_mobile, content, owner, phone, img_src)
+		values (#{title},
+		#{market}, #{address}, #{item}, #{useRechargeCard}, #{useBill},
+		#{useMobile}, #{content}, #{owner}, #{phone}, #{imgSrc})
+    
+		<selectKey resultType="Long" keyProperty="sno"
+			keyColumn="sno" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+    
+	</insert>
+
+	<select id="read" resultType="StoreVO">
+		select * from view_store_reviews_bookmarks
+		where sno =	#{sno}
+	</select>
+
+
+	<delete id="delete">
+		delete from store where sno = #{sno}
+	</delete>
+
+	<update id="update">
+		update store set
+		title = #{title},
+		market = #{market},
+		address = #{address},
+		item = #{item},
+		use_recharge_card =
+		#{useRechargeCard},
+		use_bill = #{useBill},
+		use_mobile = #{useMobile},
+		content = #{content},
+		owner = #{owner},
+		phone = #{phone},
+		img_src =
+		#{imgSrc}
+		where sno =
+		#{sno}
+	</update>
+
+	<!-- 즐겨찾기 -->
+	<select id="getStoreBookmarksList" resultType="long">
+		select sno from
+		store_bookmark
+		where username = #{username}
+	</select>
+
+	<insert id="addStoreBookmark">
+		insert into store_bookmark(sno, username)
+		values
+		(#{sno}, #{username})
+	</insert>
+
+	<delete id="deleteStoreBookmark">
+		delete from store_bookmark
+		where sno = #{sno} and
+		username = #{username}
+	</delete>
+
+	<sql id="criteria">
+		<trim prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like CONCAT('%', #{keyword}, '%') </when>
+						<when test="type == 'M'.toString()">
+							market like CONCAT('%', #{keyword}, '%') </when>
+						<when test="type == 'A'.toString()">
+							address like CONCAT('%', #{keyword}, '%') </when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<sql id="criteriab">
+		<trim prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like CONCAT('%', #{keyword}, '%') </when>
+						<when test="type == 'M'.toString()">
+							market like CONCAT('%', #{keyword}, '%') </when>
+						<when test="type == 'A'.toString()">
+							address like CONCAT('%', #{keyword}, '%') </when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+	<sql id="sort">
+	<if test="sort == null">
+		order by sno
+		</if>
+		<if test="sort == 'default'">
+		order by sno
+		</if>
+		<if test="sort == 'starCount'">
+		order by avg_rate desc
+		</if>
+		<if test="sort == 'bookmarkCount'">
+		order by store_bookmarks desc
+		</if>
+		<if test="sort == 'reviewCount'">
+		order by review_count desc
+		</if>
+	</sql>
+
+	<select id="getBookMarksList" parameterType="map" resultType="StoreVO">
+		select * from view_my_bookmarks_reviews
+		where username = #{username}
+		order by sno
+		limit #{cri.offset}, #{cri.amount}
+	</select>
+	
+	<select id="bookmarkTotalCount" resultType="int">
+		select count(*) from view_my_bookmarks_reviews
+		where username = #{username}
+	</select>
+		
+</mapper>
