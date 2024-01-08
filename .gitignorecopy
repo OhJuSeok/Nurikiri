@@ -170,3 +170,21 @@ config.properties
 
 
 # 작업 중 프로젝트 폴더 안에 메모해둔 비밀번호나 공유하면 안되는 내용 등
+
+# End of https://www.gitignore.io/api/git,java,maven,windows,eclipse
+
+*.RootConfig
+src/main/java/com/nurikiri/domain/BoardAttachmentVO.java
+src/main/java/com/nurikiri/domain/OcrBodyImage.java
+src/main/java/com/nurikiri/domain/OcrDTO.java
+src/main/java/com/nurikiri/domain/clovaOcr/Bounding.java
+src/main/java/com/nurikiri/domain/clovaOcr/Fields.java
+src/main/java/com/nurikiri/domain/clovaOcr/Images.java
+src/main/java/com/nurikiri/domain/clovaOcr/MatchedTemplate.java
+src/main/java/com/nurikiri/domain/clovaOcr/TextExtraction.java
+src/main/java/com/nurikiri/domain/clovaOcr/Title.java
+src/main/java/com/nurikiri/domain/clovaOcr/ValidationResult.java
+src/main/java/com/nurikiri/service/OcrTestService.java
+src/main/webapp/resources/js/boardSearch.js
+src/main/webapp/WEB-INF/views/board/search_bar.jsp
+src/main/java/com/nurikiri/config/RootConfig.java
